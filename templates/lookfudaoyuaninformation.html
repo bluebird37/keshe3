@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.min.js"></script>
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 50px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        #table1{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 50px;
+            height: 180px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #table2{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 0px;
+            height: 90px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #table3{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 0px;
+            height: 90px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        th{
+            text-align: center;
+            height: 60px;
+            color: #080808;
+        }
+        input[type="text"]{
+            margin-left: 300px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        tbody {
+            height: auto;
+            color: #080808;
+            background-color: #e6e6e6;
+            text-align: center;
+
+        }
+        #submit{
+            margin-left: 40px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+        #submit1{
+            margin-left: 100px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+    </style>
+</head>
+
+<!--初始预约信息-->
+<script>
+    var temp1;
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        document.getElementById("Span").innerText =number;
+        get();
+    }
+    function get(){
+        $.ajax({
+            url:"/getfirstfdyinfo",
+            type:'GET',
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['counselor_id'];
+                    document.getElementById('t2').innerText=data['counselor_name'];
+                    if(data['counselor_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    else if(data['counselor_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    document.getElementById('t4').innerText=data['counselor_phone'];
+                    document.getElementById('t5').innerText=data['counselor_departments'];
+                    document.getElementById('t6').innerText=data['counselor_next'];
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction() {
+        var counselor_id=document.getElementById('search').value;
+        mydata={'counselor_id':counselor_id};
+        $.ajax({
+            url:"/getlookcounselor",
+            type:'POST',
+            data:mydata,
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['counselor_id'];
+                    document.getElementById('t2').innerText=data['counselor_name'];
+                    if(data['counselor_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    else if(data['counselor_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    document.getElementById('t4').innerText=data['counselor_phone'];
+                    document.getElementById('t5').innerText=data['counselor_departments'];
+                    document.getElementById('t6').innerText=data['counselor_next'];
+                }
+                else{
+                    alert("没有该辅导员!");
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction1() {
+        if (confirm("确定提交更改？")) {
+            var counselor_id=document.getElementById('t1').innerText;
+            var counselor_name=document.getElementById('t2').innerText;
+            var counselor_sex;
+            if(document.getElementById('option1').checked==true){
+                counselor_sex='男';
+            }
+            else if(document.getElementById('option2').checked==true){
+                counselor_sex='女';
+            }
+            var counselor_phone=document.getElementById('t4').innerText;
+            var counselor_departments=document.getElementById('t5').innerText;
+            var counselor_next=document.getElementById('t6').innerText;
+            var hanzi=/^[\u2E80-\u9FFF]+$/;
+            var shuzi11=/^\d{11}$/;
+            var flag=1;
+            if(counselor_name.length>0&&!hanzi.test(counselor_name)){
+                flag = 0;
+                alert("辅导员姓名只能为中文");
+            }
+            else if(counselor_phone.length>0&&!shuzi11.test(counselor_phone)){
+                flag = 0;
+                alert("辅导员电话只能为11位数字");
+            }
+            else if(counselor_departments.length>0&&!hanzi.test(counselor_departments)){
+                flag = 0;
+                alert("院系只能为中文");
+            }
+            if(flag==1){
+                var mydata={'counselor_id':counselor_id,'counselor_name':counselor_name,'counselor_sex':counselor_sex,'counselor_phone':counselor_phone,'counselor_departments':counselor_departments,'counselor_next':counselor_next};
+                $.ajax({
+                    url:"/changefudaoyuaninformation",
+                    type:'POST',
+                    data:mydata,
+                    success: function (data) {
+                        if(data=='true')
+                            alert("修改成功！");
+                        else if(data=='flase')
+                            alert("修改失败！");
+                    }.bind(this),
+                    error: function () {
+                        alert('获取数据失败');
+                    }
+                })
+            }
+        }
+    }
+</script>
+
+<body onload="s()">
+<label id="admin" style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工：</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="检索教职工号" required autofocus><button id="submit" onclick="myfunction()">查找</button><button id="submit1" onclick="myfunction1()">提交更改</button>
+<table border="1" id="table1">
+    <tr>
+        <td >职工号</td>
+        <td id="t1"></td>
+        <td >姓名</td>
+        <td id="t2" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >性别</td>
+        <td id="t3">
+            <div style="height: 30px;width: 80px;margin-top: 20px" class="btn-group" data-toggle="buttons">
+                <input checked = “checked” type="radio" name="options" id="option1">男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="options" id="option2">女
+            </div>
+        </td>
+        <td >电话</td>
+        <td id="t4" contentEditable="true"></td>
+    </tr>
+    <table id="table2" border="1">
+        <tr>
+            <td width="200px" >院系</td>
+            <td  id="t5" width="1000px" contentEditable="true"></td>
+        </tr>
+    </table>
+    <table id="table3" border="1">
+        <tr>
+            <td width="200px" >备注</td>
+            <td  id="t6" width="1000px" contentEditable="true"></td>
+        </tr>
+    </table>
+</table>
+</body>
+</html>

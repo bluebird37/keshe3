@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.min.js"></script>
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 50px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        #table1{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 50px;
+            height: 350px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #table2{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 0px;
+            height: 70px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        th{
+            text-align: center;
+            height: 60px;
+            color: #080808;
+        }
+        input[type="text"]{
+            margin-left: 300px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        tbody {
+            height: auto;
+            color: #080808;
+            background-color: #e6e6e6;
+            text-align: center;
+
+        }
+        #submit{
+            margin-left: 40px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+        #submit1{
+            margin-left: 100px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+    </style>
+</head>
+
+<!--初始预约信息-->
+<script>
+    var temp1;
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        document.getElementById("Span").innerText =number;
+        get();
+    }
+    function get(){
+        $.ajax({
+            url:"/getfirststuinfo",
+            type:'GET',
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['student_number'];
+                    document.getElementById('t2').innerText=data['student_name'];
+                    if(data['student_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    if(data['student_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    document.getElementById('t4').innerText=data['student_birsday'];
+                    if(data['student_identity']=='本科生'){
+                        document.getElementById('sel1').selected=true;
+                    }
+                    else if(data['student_identity']=='研究生'){
+                        document.getElementById('sel2').selected=true;
+                    }
+                    document.getElementById('t6').innerText=data['student_national'];
+                    document.getElementById('t7').innerText=data['student_departments'];
+                    document.getElementById('t8').innerText=data['student_job'];
+                    document.getElementById('t9').innerText=data['student_class_id'];
+                    document.getElementById('t10').innerText=data['student_location'];
+                    document.getElementById('t11').innerText=data['student_phone'];
+                    document.getElementById('t12').innerText=data['student_idnumber'];
+                    document.getElementById('t13').innerText=data['student_school_time'];
+                    if(data['student_liuji']=='1'){
+                        document.getElementById('check1').checked=true;
+                    }
+                    else if(data['student_liuji']=='0'||!data['student_liuji']){
+                        document.getElementById('check1').checked=false;
+                    }
+                    if(data['student_xiuxue']=='1'){
+                        document.getElementById('check2').checked=true;
+                    }
+                    else if(data['student_xiuxue']=='0'||!data['student_xiuxue']){
+                        document.getElementById('check2').checked=false;
+                    }
+                    document.getElementById('t16').innerText=data['student_behavior'];
+                    temp1=document.getElementById('t9').innerText;
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction() {
+        var studentnumber=document.getElementById('search').value;
+        mydata={'student_number':studentnumber};
+        $.ajax({
+            url:"/getlookstudent",
+            type:'POST',
+            data:mydata,
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['student_number'];
+                    document.getElementById('t2').innerText=data['student_name'];
+                    if(data['student_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    if(data['student_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    document.getElementById('t4').innerText=data['student_birsday'];
+                    if(data['student_identity']=='本科生'){
+                        document.getElementById('sel1').selected=true;
+                    }
+                    else if(data['student_identity']=='研究生'){
+                        document.getElementById('sel2').selected=true;
+                    }
+                    document.getElementById('t6').innerText=data['student_national'];
+                    document.getElementById('t7').innerText=data['student_departments'];
+                    document.getElementById('t8').innerText=data['student_job'];
+                    document.getElementById('t9').innerText=data['student_class_id'];
+                    document.getElementById('t10').innerText=data['student_location'];
+                    document.getElementById('t11').innerText=data['student_phone'];
+                    document.getElementById('t12').innerText=data['student_idnumber'];
+                    document.getElementById('t13').innerText=data['student_school_time'];
+                    if(data['student_liuji']=='1'){
+                        document.getElementById('check1').checked=true;
+                    }
+                    else if(data['student_liuji']=='0'||!data['student_liuji']){
+                        document.getElementById('check1').checked=false;
+                    }
+                    if(data['student_xiuxue']=='1'){
+                        document.getElementById('check2').checked=true;
+                    }
+                    else if(data['student_xiuxue']=='0'||!data['student_xiuxue']){
+                        document.getElementById('check2').checked=false;
+                    }
+                    document.getElementById('t16').innerText=data['student_behavior'];
+                    temp1=document.getElementById('t9').innerText;
+                }
+                else{
+                    alert("没有该同学!");
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction1() {
+        if (confirm("确定提交更改？")) {
+            var studentnumber=document.getElementById('t1').innerText;
+            var studentname=document.getElementById('t2').innerText;
+            var studentsex;
+            if(document.getElementById('option1').checked==true){
+                studentsex='男';
+            }
+            else if(document.getElementById('option2').checked==true){
+                studentsex='女';
+            }
+            var studentbirsday=document.getElementById('t4').innerText;
+            var studentidentity=document.getElementById('t5').value;
+            var studentnational=document.getElementById('t6').innerText;
+            var studentdepartments=document.getElementById('t7').innerText;
+            var studentjob=document.getElementById('t8').innerText;
+            var studentclass_id=document.getElementById('t9').innerText;
+            var studentlocation=document.getElementById('t10').innerText;
+            var studentphone=document.getElementById('t11').innerText;
+            var studentidnumber=document.getElementById('t12').innerText;
+            var studentschool_time=document.getElementById('t13').innerText;
+            var studentliuji,studentxiuxue;
+            if(document.getElementById('check1').checked==true){
+                studentliuji='1';
+            }
+            else if(document.getElementById('check1').checked==false){
+                studentliuji='0';
+            }
+            if(document.getElementById('check2').checked==true){
+                studentxiuxue='1';
+            }
+            else if(document.getElementById('check2').checked==false){
+                studentxiuxue='0';
+            }
+            var flag=1;
+            var change = 0;
+            var shuzi=/^[0-9]*$/;
+            var hanzi=/^[\u2E80-\u9FFF]+$/;
+            var shuzi8=/^\d{8}$/;
+            var shuzi7=/^\d{7}$/;
+            var shuzi11=/^\d{11}$/;
+            var shuzi4=/^\d{4}$/;
+            var shuzi18=/^\d{18}$/;
+            if(studentname.length>0&&!hanzi.test(studentname)){
+                flag=0;
+                alert('学生姓名只能输入汉字！')
+            }
+            else if (studentbirsday.length>0&&!shuzi8.test(studentbirsday)) {
+                flag = 0;
+                alert("出生日期位数应为8位");
+            }
+            else if (studentdepartments.length>0&&!hanzi.test(studentdepartments)) {
+                flag = 0;
+                alert("院系必须输入中文");
+            }
+            else if (studentjob.length>0&&!hanzi.test(studentjob)) {
+                flag = 0;
+                alert("专业必须输入中文");
+            }
+            else if (studentclass_id.length>0&&!shuzi7.test(studentclass_id)) {
+                flag = 0;
+                alert("学生班号位数应为7位");
+            }
+            else if (studentphone.length>0&&!shuzi11.test(studentphone)) {
+                flag = 0;
+                alert("学生联系方式应为11位");
+            }
+            else if (studentschool_time.length>0&&!shuzi4.test(studentschool_time)) {
+                flag = 0;
+                alert("学生入学年份应为4位");
+            }
+            else if (studentidnumber.length>0&&!shuzi18.test(studentidnumber)) {
+                flag = 0;
+                alert("学生身份证号应为18位");
+            }
+            if(flag==1){
+                var mydata = {
+                    'studentnumber': studentnumber,
+                    'studentname': studentname,
+                    'studentsex': studentsex,
+                    'studentbirsday': studentbirsday,
+                    'studentidentity': studentidentity,
+                    'studentdepartments': studentdepartments,
+                    'studentjob': studentjob,
+                    'studentclass_id': studentclass_id,
+                    'studentlocation': studentlocation,
+                    'studentphone': studentphone,
+                    'studentnational': studentnational,
+                    'studentschool_time': studentschool_time,
+                    'studentidnumber': studentidnumber,
+                    'studentliuji': studentliuji,
+                    'studentxiuxue': studentxiuxue,
+                    'temp': temp1
+                };
+                $.ajax({
+                    url: "/changestudentinformation",
+                    type: 'POST',
+                    data: mydata,
+                    success: function (data) {
+                        if (data == 'true'){
+                            alert("修改成功！");
+                            temp1=document.getElementById('t9').innerText;
+                        }
+                        else if (data == 'flase')
+                            alert("修改失败！");
+                        else
+                            alert("班级不存在！");
+                    }.bind(this),
+                    error: function () {
+                        alert('获取数据失败');
+                    }
+                })
+            }
+        }
+    }
+</script>
+
+<body onload="s()">
+<label id="admin" style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工：</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="检索学生学号" required autofocus><button id="submit" onclick="myfunction()">查找</button><button id="submit1" onclick="myfunction1()">提交更改</button>
+<table border="1" id="table1">
+    <tr>
+        <td >学号</td>
+        <td id="t1"></td>
+        <td >姓名</td>
+        <td id="t2" contentEditable="true"></td>
+        <td >性别</td>
+        <td id="t3">
+            <div style="height: 30px;width: 80px;margin-top: 20px" class="btn-group" data-toggle="buttons">
+                <input checked = “checked” type="radio" name="options" id="option1">男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="options" id="option2">女
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td >出生日期</td>
+        <td id="t4" contentEditable="true"></td>
+        <td >身份</td>
+        <td >
+            <select  id="t5" style="background-color: #80bdff;border-radius: 5px;">
+                <option id="sel1" value="本科生">本科生</option>
+                <option id="sel2" value="研究生">研究生</option>
+            </select>
+        </td>
+        <td >民族</td>
+        <td id="t6" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >学院</td>
+        <td id="t7" contentEditable="true"></td>
+        <td >专业</td>
+        <td id="t8" contentEditable="true"></td>
+        <td >班级</td>
+        <td id="t9" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >地址</td>
+        <td id="t10" contentEditable="true"></td>
+        <td >电话</td>
+        <td id="t11" contentEditable="true"></td>
+        <td >身份证号</td>
+        <td id="t12" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >入学年份</td>
+        <td id="t13" contentEditable="true"></td>
+        <td >留级</td>
+        <td id="t14">
+            <input id="check1" style="width:20px;height:20px;" type="checkbox" name="t15" value="1" />
+        </td>
+        <td >休学</td>
+        <td id="t15">
+            <input id="check2" style="width:20px;height:20px;" type="checkbox" name="t16" value="1" />
+        </td>
+    </tr>
+    <table id="table2" border="1">
+        <tr>
+            <td width="200px">个人表现</td>
+            <td  id="t16" width="1000px"></td>
+        </tr>
+    </table>
+</table>
+</body>
+</html>

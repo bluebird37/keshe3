@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.min.js"></script>
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 50px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        #table1{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 50px;
+            height: 350px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #table2{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 0px;
+            height: 70px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        th{
+            text-align: center;
+            height: 60px;
+            color: #080808;
+        }
+        input[type="text"]{
+            margin-left: 300px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        tbody {
+            height: auto;
+            color: #080808;
+            background-color: #e6e6e6;
+            text-align: center;
+
+        }
+        #submit{
+            margin-left: 40px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+        #submit1{
+            margin-left: 100px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+    </style>
+</head>
+
+<!--初始预约信息-->
+<script>
+    var temp1;
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        document.getElementById("Span").innerText =number;
+        get();
+    }
+    function get(){
+        $.ajax({
+            url:"/getfirstteainfo",
+            type:'GET',
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['teacher_id'];
+                    document.getElementById('t2').innerText=data['teacher_name'];
+                    if(data['teacher_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    else if(data['teacher_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    if(data['teacher_title']=='讲师'){
+                        document.getElementById('sel1').selected=true;
+                    }
+                    else if(data['teacher_title']=='副教授'){
+                        document.getElementById('sel2').selected=true;
+                    }
+                    else if(data['teacher_title']=='教授'){
+                        document.getElementById('sel3').selected=true;
+                    }
+                    document.getElementById('t4').innerText=data['teacher_phone'];
+                    document.getElementById('t6').innerText=data['teacher_departments'];
+                    document.getElementById('t7').innerText=data['teacher_next'];
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction() {
+        var teacher_id=document.getElementById('search').value;
+        mydata={'teacher_id':teacher_id};
+        $.ajax({
+            url:"/getlookteacher",
+            type:'POST',
+            data:mydata,
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['teacher_id'];
+                    document.getElementById('t2').innerText=data['teacher_name'];
+                    if(data['teacher_sex']=='男'){
+                        document.getElementById('option1').checked=true;
+                        document.getElementById('option2').checked=false;
+                    }
+                    else if(data['teacher_sex']=='女'){
+                        document.getElementById('option1').checked=false;
+                        document.getElementById('option2').checked=true;
+                    }
+                    if(data['teacher_title']=='讲师'){
+                        document.getElementById('sel1').selected=true;
+                    }
+                    else if(data['teacher_title']=='副教授'){
+                        document.getElementById('sel2').selected=true;
+                    }
+                    else if(data['teacher_title']=='教授'){
+                        document.getElementById('sel3').selected=true;
+                    }
+                    document.getElementById('t4').innerText=data['teacher_phone'];
+                    document.getElementById('t6').innerText=data['teacher_departments'];
+                    document.getElementById('t7').innerText=data['teacher_next'];
+                }
+                else{
+                    alert("没有该教师!");
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction1() {
+        if (confirm("确定提交更改？")) {
+            var teacher_id=document.getElementById('t1').innerText;
+            var teacher_name=document.getElementById('t2').innerText;
+            var teacher_sex;
+            if(document.getElementById('option1').checked==true){
+                teacher_sex='男';
+            }
+            else if(document.getElementById('option2').checked==true){
+                teacher_sex='女';
+            }
+            var teacher_phone=document.getElementById('t4').innerText;
+            var teacher_title=document.getElementById('t5').value;
+            var teacher_departments=document.getElementById('t6').innerText;
+            var teacher_next=document.getElementById('t7').innerText;
+            var flag=1;
+            var hanzi=/^[\u2E80-\u9FFF]+$/;
+            var shuzi11=/^\d{11}$/;
+            if(teacher_name.length>0&&!hanzi.test(teacher_name)){
+                flag = 0;
+                alert("教师姓名只能为中文");
+            }
+            else if(teacher_phone.length>0&&!shuzi11.test(teacher_phone)){
+                flag = 0;
+                alert("教师电话只能为11位数字");
+            }
+            else if(teacher_departments.length>0&&!hanzi.test(teacher_departments)){
+                flag = 0;
+                alert("院系只能为中文");
+            }
+            if(flag==1){
+                var mydata={'teacher_id':teacher_id,'teacher_name':teacher_name,'teacher_sex':teacher_sex,'teacher_phone':teacher_phone,'teacher_title':teacher_title,'teacher_departments':teacher_departments,'teacher_next':teacher_next};
+                $.ajax({
+                    url:"/changeteacherinformation",
+                    type:'POST',
+                    data:mydata,
+                    success: function (data) {
+                        if(data=='true')
+                            alert("修改成功！");
+                        else if(data=='flase')
+                            alert("修改失败！");
+                    }.bind(this),
+                    error: function () {
+                        alert('获取数据失败');
+                    }
+                })
+            }
+        }
+    }
+</script>
+
+<body onload="s()">
+<label id="admin" style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工：</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="检索教职工号" required autofocus><button id="submit" onclick="myfunction()">查找</button><button id="submit1" onclick="myfunction1()">提交更改</button>
+<table border="1" id="table1">
+    <tr>
+        <td >职工号</td>
+        <td id="t1"></td>
+        <td >姓名</td>
+        <td id="t2" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >性别</td>
+        <td id="t3">
+            <div style="height: 30px;width: 80px;margin-top: 20px" class="btn-group" data-toggle="buttons">
+                <input checked = “checked” type="radio" name="options" id="option1">男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="options" id="option2">女
+            </div>
+        </td>
+        <td >电话</td>
+        <td id="t4" contentEditable="true"></td>
+    </tr>
+    <tr>
+        <td >职称</td>
+        <td >
+            <select  id="t5" style="background-color: #80bdff;border-radius: 5px;">
+                <option id="sel1" value="讲师">讲师</option>
+                <option id="sel2" value="副教授">副教授</option>
+                <option id="sel3" value="教授">教授</option>
+            </select>
+        </td>
+        <td >学院</td>
+        <td id="t6" contentEditable="true"></td>
+    </tr>
+    <table id="table2" border="1">
+        <tr>
+            <td width="200px" >研究方向</td>
+            <td  id="t7" width="1000px" contentEditable="true"></td>
+        </tr>
+    </table>
+</table>
+</body>
+</html>

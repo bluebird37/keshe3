@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<script>
+    function myFunction0(){
+        var files = document.getElementById('files').files;
+        if (!files.length)
+        {
+            alert('Please select a file!');
+            return;
+        }
+        var file = files[0];
+        var form = new FormData();
+        form.append("infile", file);
+        // xhr.open("post", "/daoru", false);
+        // xhr.send(form);
+        $.ajax({
+            url:'/daoru',
+            type:'POST',
+            async:false,
+            data : form,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            success : function(data) {
+                if(data=="true"){
+                    alert("导入成功");
+                }else{
+                    alert("导入失败");
+                }
+            }
+        })
+    }
+    function myFunction1() {
+        $.ajax({
+            url: "/getlogin",
+            type: 'GET',
+            success: function (data) {
+                if (data == 'true')
+                    alert("生成成功！");
+                if (data == 'false0')
+                    alert("学生信息没有导入！");
+                if (data == 'false1')
+                    alert("教师信息没有导入！");
+                if (data == 'false2')
+                    alert("辅导员信息没有导入！");
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+</script>
+<body style="background-repeat:no-repeat;background-color:#e6e6e6;">
+<div style="margin-left: 400px;margin-top: 200px;font-size: 25px">
+    <a style="font-size: 25px;margin-left: 150px">选择你要导入的excel文件</a>
+    </br>
+    </br>
+    <span>1.</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="file" id="files" name="file" style="height: 50px;color: #80bdff">
+    <button onclick="myFunction0()" style="height: 40px;width:100px;margin-left: 20px" type="submit" class="btn btn-primary" id="btn-login0">导入</button>
+</div>
+</br>
+</br>
+<div style="margin-left: 400px;font-size: 25px">
+    <span>2.</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="myFunction1()" style="height: 40px;width:200px" type="submit" class="btn btn-primary" id="btn-login1">生成初始登陆密码</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 15px">(注意:生成初始登陆密码前请先导入学生、教师、辅导员信息表)</span>
+</div>
+</body>
+<script src="../static/jquery.min.js"></script>
+</html>

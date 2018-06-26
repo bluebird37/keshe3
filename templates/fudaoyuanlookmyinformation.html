@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 20px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        .commonDiv{
+            border:3px solid #ffc107; /*上下左右的边框线样式相同*/
+            margin-left:80px;
+            margin-top:10px;
+            width: 1200px;
+            height: 460px;
+            border-radius: 20px;
+        }
+        table{
+            table-layout: fixed;
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 20px;
+            margin-top: 20px;
+            height: 400px;
+            width: 1200px;
+            word-break:break-all;
+        }
+    </style>
+</head>
+<script>
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        document.getElementById("Span").innerText =number;
+        getstudentdata();
+    }
+    function getstudentdata() {
+        var mydata={'Number':number};
+        $.ajax({
+            url:"/fudaoyuanlookmyinformation",
+            type:'POST',
+            data:mydata,
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('table1').rows[0].cells[1].innerHTML=data['counselor_id'];
+                    document.getElementById('table1').rows[1].cells[1].innerHTML=data['counselor_name'];
+                    document.getElementById('table1').rows[2].cells[1].innerHTML=data['counselor_sex'];
+                    document.getElementById('table1').rows[3].cells[1].innerHTML=data['counselor_phone'];
+                    document.getElementById('table1').rows[4].cells[1].innerHTML=data['counselor_departments'];
+                    document.getElementById('table1').rows[5].cells[1].innerHTML=data['counselor_next'];
+                }
+                else{
+                    alert("还没有信息呢，您可以联系教务处提交信息");
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+</script>
+
+<body onload="s()">
+<label style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工:</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span>
+<!--设计上下左右边框-->
+<div class="commonDiv">
+    <table id="table1">
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">职工号:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">姓名:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">性别:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">联系方式:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">院系:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 50px">备注:</th>
+            <td style="width: 300px"></td>
+        </tr>
+    </table>
+</div>
+<div style="margin-left: 900px;margin-top: 40px">
+    <a href="#">若个人信息有误可联系管理员修改信息</a>
+</div>
+<script type="text/javascript" src="../static/jquery.min.js"></script>
+<script type="text/javascript" src="../static/bootstrap.min.js"></script>
+</body>
+</html>

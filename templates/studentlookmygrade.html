@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.min.js"></script>
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 20px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        .commonDiv{
+            border:3px solid #ffc107; /*上下左右的边框线样式相同*/
+            margin-left:80px;
+            margin-top:10px;
+            width: 1200px;
+            height: 520px;
+            border-radius: 20px;
+        }
+        table{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 20px;
+            height: 460px;
+            width: 1100px;
+            word-break:break-all;
+            border-right-color: #fdfdfe;
+            border-bottom-color: #fdfdfe;
+            border-left-color: #fdfdfe;
+            border-top-color: #fdfdfe;
+        }
+        th{
+            text-align: center;
+            height: 60px;
+            color: #080808;
+        }
+        input[type="text"]{
+            margin-left: 750px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        tbody {
+            height: auto;
+            color: #080808;
+            background-color: #e6e6e6;
+            text-align: center;
+
+        }
+        #mydiv{
+            overflow: auto;
+            margin-top: 30px;
+            margin-left: 20px;
+            height: 460px;
+            position: absolute;
+        }
+    </style>
+</head>
+<!--模糊搜索-->
+<script>
+$().ready(function(){
+            $("#search").keyup(
+                function(){
+                    $("table tr:gt(0)").hide();
+                    var $d = $("table tr:gt(0)").filter(":contains('"+$.trim($("#search").val())+"')");
+                    $d.show();
+                }
+            )
+        })
+</script>
+<!--初始预约信息-->
+<script>
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        document.getElementById("Span").innerText =number;
+        student_look();
+    }
+    function student_look() {
+        var mydata={'Number':number};
+        $.ajax({
+            url:"/studentlookmygrade",
+            type:'POST',
+            data:mydata,
+            success: function (data) {//请求得到服务器该学生的预约情况
+                if(data=='false'){
+                    alert("没有成绩信息");
+                }
+                else{
+                    getdata=data['result'];
+                    var tbody = document.getElementById('tbMain');
+                    for(var i = 0;i < getdata.length; i++){ //遍历一下json数据
+                        var trow = getDataRow(getdata[i]); //定义一个方法,返回tr数据
+                        tbody.appendChild(trow);
+                    }
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function getDataRow(h){
+        var row = document.createElement('tr'); //创建行
+        //创建第一列
+        var lie0 = document.createElement('td');
+        lie0.innerHTML = h.course_id; //填充数据
+        row.appendChild(lie0); //加入行  ，下面类似
+        //创建第二列
+        var lie1 = document.createElement('td');
+        lie1.innerHTML = h.course_name;
+        row.appendChild(lie1);
+        //创建第三列
+        var lie2 = document.createElement('td');
+        lie2.innerHTML = h.score_score;
+        row.appendChild(lie2);
+        //创建第四列
+        var lie3 = document.createElement('td');
+        lie3.innerHTML = h.course_term;
+        row.appendChild(lie3);
+        //创建第5列
+        var lie4= document.createElement('td');
+        lie4.innerHTML = h.course_time;
+        row.appendChild(lie4);
+        //创建第6列
+        var lie5 = document.createElement('td');
+        lie5.innerHTML = h.course_score;
+        row.appendChild(lie5);
+        //创建第7列
+        var lie6 = document.createElement('td');
+        lie6.innerHTML = h.course_teacher_name;
+        row.appendChild(lie6);
+        //创建第8列
+        var lie7 = document.createElement('td');
+        lie7.innerHTML = h.course_nature;
+        row.appendChild(lie7);
+        //创建第9列
+        var lie8 = document.createElement('td');
+        lie8.innerHTML = h.course_test_nature;
+        row.appendChild(lie8);
+         //到这里，json中的数据已经添加到表格中，下面为每行末尾添加删除按钮
+        return row; //返回tr数据
+    }
+    ////////////////////打印信息/////////////////////////////////
+    var idTmr;
+    function getExplorer() {
+        var explorer = window.navigator.userAgent;
+        //ie
+        if(explorer.indexOf("MSIE") >= 0) {
+            return 'ie';
+        }
+        //firefox
+        else if(explorer.indexOf("Firefox") >= 0) {
+            return 'Firefox';
+        }
+        //Chrome
+        else if(explorer.indexOf("Chrome") >= 0) {
+            return 'Chrome';
+        }
+        //Opera
+        else if(explorer.indexOf("Opera") >= 0) {
+            return 'Opera';
+        }
+        //Safari
+        else if(explorer.indexOf("Safari") >= 0) {
+            return 'Safari';
+        }
+    }
+    function method5(tableid) {
+        if(getExplorer() == 'Chrom') {
+            var curTbl = document.getElementById(tableid);
+            var oXL = new ActiveXObject("Excel.Application");
+            var oWB = oXL.Workbooks.Add();
+            var xlsheet = oWB.Worksheets(1);
+            var sel = document.body.createTextRange();
+            sel.moveToElementText(curTbl);
+            sel.select();
+            sel.execCommand("Copy");
+            xlsheet.Paste();
+            oXL.Visible = true;
+            try {
+                var fname = oXL.Application.GetSaveAsFilename("Excel.xlsx",
+                    "Excel Spreadsheets (*.xlsx), *.xlsx");
+            } catch(e) {
+                print("Nested catch caught " + e);
+            } finally {
+                oWB.SaveAs(fname);
+                oWB.Close(savechanges = false);
+                oXL.Quit();
+                oXL = null;
+                idTmr = window.setInterval("Cleanup();", 1);
+            }
+        } else {
+            tableToExcel(tableid)
+        }
+    }
+    function Cleanup() {
+        window.clearInterval(idTmr);
+        CollectGarbage();
+    }
+    var tableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,',
+            template = '<html><head><meta charset="UTF-8"></head><body><table  border="1">{table}</table></body></html>',
+            base64 = function(
+                s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            },
+            format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            }
+        return function(table, name) {
+            if(!table.nodeType)
+                table = document.getElementById(table)
+            var ctx = {
+                worksheet: name || 'Worksheet',
+                table: table.innerHTML
+            }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
+</script>
+
+<body onload="s()">
+<label style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">学生:</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="模糊搜索" required autofocus>
+<!--设计上下左右边框-->
+<div class="commonDiv">
+    <div id="mydiv">
+        <table id="table1" border="1">
+            <thead>
+            <tr>
+                <th>课程号</th>
+                <th>课程名</th>
+                <th>分数</th>
+                <th>学期</th>
+                <th>课时</th>
+                <th>学分</th>
+                <th>任课教师</th>
+                <th>课程性质</th>
+                <th>考试性质</th>
+            </tr>
+            </thead>
+            <tbody id="tbMain"></tbody>
+        </table>
+    </div>
+</div>
+<div style="margin-left: 200px;margin-top: 10px">
+    <button onclick="method5('table1')" id="excell" class="btn btn-primary">打印成绩到excel表中</button><a style="margin-left: 550px;"href="#">若个人成绩有误可联系管理员</a>
+</div>
+</body>
+</html>

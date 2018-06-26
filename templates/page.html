@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<script>
+    function sc1() {
+        document.getElementById("tt").style.top = (document.documentElement.scrollTop + (document.documentElement.clientHeight - document.getElementById("tt").offsetHeight) / 2) + "px";
+        document.getElementById("tt").style.left = (document.documentElement.scrollLeft + (document.documentElement.clientWidth - document.getElementById("tt").offsetWidth) / 2) + "px";
+    }
+    function myFunction0() {
+        var temp=document.getElementById('inputPassword').value;
+        localStorage.setItem('repassword',temp);
+        window.close();
+    }
+    function myFunction1() {
+        window.close();
+    }
+</script>
+<body onUnload="document.cookie='windowOpen=';"  onLoad="document.cookie='windowOpen=yes';" style="background-color:#e6e6e6" onload="sc1()">
+<div id="tt" class="container">
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+            <div class="form-signin" target="submitFrame">
+                <label>您需要再次输入密码才能执行此操作</label>
+                <input style="width: 300px" type="password" id="inputPassword" class="form-control" placeholder="请输入密码" required>
+                </br>
+                <div>
+                    <button onclick="myFunction0()" type="submit" class="btn btn-primary" id="btn-login1">确认</button>
+                    <button onclick="myFunction1()" style="margin-left: 185px" type="submit" class="btn btn-primary" id="btn-login2">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <script src="../static/jquery.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<script>
+    var password=localStorage.getItem('adminpassword');
+    function remove0() {
+        var name0=document.getElementById('problem0').value;
+        var shuzi4=/^\d{4}$/;
+        if(!shuzi4.test(name0)){
+            alert("年份应为4位数字");
+        }
+        else {
+            var winObj = window.open("page.html", "newwindow", "height=200, width=350, top=200, left=600, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            var loop = setInterval(function () {
+                if (winObj.closed) {
+                    clearInterval(loop);
+                    var repassword = localStorage.getItem('repassword');
+                    if(repassword!=''){
+                        if (repassword == password) {
+                            school_time = (Number(name0) - 4).toString();
+                            var mydata = {'student_school_time': school_time};
+                            $.ajax({
+                                url: "/remove0",
+                                type: 'POST',
+                                data: mydata,
+                                success: function (data) {
+                                    if (data == 'true')
+                                        alert("移植成功！");
+                                    else if (data == 'false')
+                                        alert("移植失败！");
+                                    else if (data == 'false0')
+                                        alert("没有该年毕业学生！");
+                                }.bind(this),
+                                error: function () {
+                                    alert('获取数据失败');
+                                }
+                            })
+                        }
+                        else if(repassword != password){
+                            alert("密码错误，你无权执行此操作！");
+                        }
+                    }
+                    localStorage.setItem('repassword','');
+                }
+            }, 1000);
+        }
+    }
+    function remove1() {
+        var name1=document.getElementById('problem1').value;
+        var shuzi4=/^\d{9}$/;
+        if(!shuzi4.test(name1)){
+            alert("学号应为9位数字");
+        }
+        else {
+            var winObj = window.open("page.html", "newwindow", "height=200, width=350, top=200, left=600, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            var loop = setInterval(function () {
+                if (winObj.closed) {
+                    clearInterval(loop);
+                    var repassword = localStorage.getItem('repassword');
+                    if(repassword!='') {
+                        if (repassword == password) {
+                            student_number = name1;
+                            var mydata = {'student_number': student_number};
+                            $.ajax({
+                                url: "/remove1",
+                                type: 'POST',
+                                data: mydata,
+                                success: function (data) {
+                                    if (data == 'true')
+                                        alert("移植成功！");
+                                    else if (data == 'false')
+                                        alert("移植失败！");
+                                    else
+                                        alert("没有该学生！");
+                                }.bind(this),
+                                error: function () {
+                                    alert('获取数据失败');
+                                }
+                            })
+                        }
+                        else if (repassword != password) {
+                            alert("密码错误，你无权执行此操作！");
+                        }
+                    }
+                    localStorage.setItem('repassword','');
+                }
+            }, 1000);
+        }
+    }
+    function remove2() {
+        var name2=document.getElementById('problem2').value;
+        if(name2[0]!='t'||name2.length!=4){
+            alert("教师id应为t+3位数字");
+        }
+        else {
+            var winObj = window.open("page.html", "newwindow", "height=200, width=350, top=200, left=600, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            var loop = setInterval(function () {
+                if (winObj.closed) {
+                    clearInterval(loop);
+                    var repassword=localStorage.getItem('repassword');
+                    if(repassword!='') {
+                        if (repassword == password) {
+                            teacher_number = name2;
+                            var mydata = {'teacher_id': teacher_number};
+                            $.ajax({
+                                url: "/remove2",
+                                type: 'POST',
+                                data: mydata,
+                                success: function (data) {
+                                    if (data == 'true')
+                                        alert("移植成功！");
+                                    else if (data == 'false')
+                                        alert("移植失败！");
+                                    else
+                                        alert("没有该教师！");
+                                }.bind(this),
+                                error: function () {
+                                    alert('获取数据失败');
+                                }
+                            })
+                        }
+                        else if (repassword != password) {
+                            alert("密码错误，你无权执行此操作！");
+                        }
+                    }
+                    localStorage.setItem('repassword','');
+                }
+            }, 1000);
+        }
+    }
+    function remove3() {
+        var name3=document.getElementById('problem3').value;
+        if(name3[0]!='f'||name3.length!=3){
+            alert("辅导员id应为f+2位数字");
+        }
+        else{
+            var winObj = window.open("page.html", "newwindow", "height=200, width=350, top=200, left=600, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+            var loop = setInterval(function () {
+                if (winObj.closed) {
+                    clearInterval(loop);
+                    var repassword=localStorage.getItem('repassword');
+                    if(repassword!='') {
+                        if (repassword == password) {
+                            counselor_number = name3;
+                            var mydata = {'counselor_id': counselor_number};
+                            $.ajax({
+                                url: "/remove3",
+                                type: 'POST',
+                                data: mydata,
+                                success: function (data) {
+                                    if (data == 'true')
+                                        alert("移植成功！");
+                                    else if (data == 'false')
+                                        alert("移植失败！");
+                                    else
+                                        alert("没有该辅导员！");
+                                }.bind(this),
+                                error: function () {
+                                    alert('获取数据失败');
+                                }
+                            })
+                        }
+                        else if (repassword != password) {
+                            alert("密码错误，你无权执行此操作！");
+                        }
+                    }
+                    localStorage.setItem('repassword','');
+                }
+            }, 1000);
+        }
+    }
+</script>
+
+<body >
+<div style="margin-top: 100px">
+    <div style="float: left">
+        <div style="margin-left: 100px;float:left;font-size: 25px;color: #080808">
+            <h2>毕业学生管理</h2>
+            </br>
+            <label style="font-size: 20px">毕业学生信息移入历史库</label>
+            </br>
+            <input style="width: 200px;height: 40px;float: left" type="text" id="problem0" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" class="form-control" placeholder="输入毕业年份" required autofocus>
+            <button style="margin-left: 50px;height: 40px" onclick="remove0()" type="submit" class="btn btn-primary" id="btn-login0">提交</button>
+            </br>
+            </br>
+            <label style="font-size: 20px">学生信息移入历史库</label>
+            </br>
+            <input style="width: 200px;height: 40px;float: left" type="text" id="problem1" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" class="form-control" placeholder="输入学生学号" required autofocus>
+            <button style="margin-left: 50px;height: 40px" onclick="remove1()" type="submit" class="btn btn-primary" id="btn-login1">提交</button>
+        </div>
+
+        <div style="margin-left: 500px;font-size: 25px;color: #080808">
+            <h2>教师离职管理</h2>
+            </br>
+            <label style="font-size: 20px">教师信息移入历史库</label>
+            </br>
+            <input style="width: 200px;height: 40px;float: left" type="text" id="problem2" onkeyup="value=value.replace(/[\W]/g,'')" class="form-control" placeholder="输入教师id" required autofocus>
+            <button style="margin-left: 50px;height: 40px" onclick="remove2()" type="submit" class="btn btn-primary" id="btn-login2">提交</button>
+        </div>
+    </div>
+
+    <div style="margin-left: 900px;font-size: 25px;color: #080808">
+        <h2>辅导员离职管理</h2>
+        </br>
+        <label style="font-size: 20px">辅导员信息移入历史库</label>
+        </br>
+        <input style="width: 200px;height: 40px;float: left" type="text" id="problem3" onkeyup="value=value.replace(/[\W]/g,'') " class="form-control" placeholder="输入辅导员id" required autofocus>
+        <button style="margin-left: 50px;height: 40px" onclick="remove3()" type="submit" class="btn btn-primary" id="btn-login3">提交</button>
+    </div>
+</div>
+<script type="text/javascript" src="../static/jquery.min.js"></script>
+<script type="text/javascript" src="../static/bootstrap.min.js"></script>
+</body>
+</html>
