@@ -59,6 +59,10 @@
                     document.getElementById('table1').rows[5].cells[1].innerHTML=data['student_departments'];
                     document.getElementById('table1').rows[6].cells[1].innerHTML=data['student_job'];
                     document.getElementById('table1').rows[7].cells[1].innerHTML=data['class_nature'];
+                    if(data['student_xiuxue']=='1')
+                        document.getElementById('table1').rows[8].cells[1].innerHTML='是';
+                    else
+                        document.getElementById('table1').rows[8].cells[1].innerHTML='否';
                     document.getElementById('table1').rows[0].cells[3].innerHTML=data['student_class_id'];
                     document.getElementById('table1').rows[1].cells[3].innerHTML=data['student_location'];
                     document.getElementById('table1').rows[2].cells[3].innerHTML=data['student_phone'];
@@ -66,6 +70,10 @@
                     document.getElementById('table1').rows[4].cells[3].innerHTML=data['student_school_time'];
                     document.getElementById('table1').rows[5].cells[3].innerHTML=data['student_idnumber'];
                     document.getElementById('table1').rows[6].cells[3].innerHTML=data['student_behavior'];
+                    if(data['student_liuji']=='1')
+                        document.getElementById('table1').rows[7].cells[3].innerHTML='是';
+                    else
+                        document.getElementById('table1').rows[7].cells[3].innerHTML='否';
                 }
                 else{
                     alert("还没有信息呢，您可以联系教务处提交信息");
@@ -127,6 +135,12 @@
         </tr>
         <tr style="font-size: 20px;color: #080808">
             <th style="width: 150px">班级荣誉:</th>
+            <td style="width: 300px"></td>
+            <th style="width: 150px">是否留级:</th>
+            <td style="width: 300px"></td>
+        </tr>
+        <tr style="font-size: 20px;color: #080808">
+            <th style="width: 150px">是否休学:</th>
             <td style="width: 300px"></td>
         </tr>
     </table>

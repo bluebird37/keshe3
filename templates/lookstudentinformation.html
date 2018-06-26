@@ -161,6 +161,18 @@
         var lie13 = document.createElement('td');
         lie13.innerHTML = h.student_behavior;
         row.appendChild(lie13);
+        var lie14 = document.createElement('td');
+        if(h.student_liuji=='1')
+            lie14.innerHTML = '是';
+        else
+            lie14.innerHTML = '否';
+        row.appendChild(lie14);
+        var lie15 = document.createElement('td');
+        if(h.student_xiuxue=='1')
+            lie15.innerHTML = '是';
+        else
+            lie15.innerHTML = '否';
+        row.appendChild(lie15);
         //到这里，json中的数据已经添加到表格中，下面为每行末尾添加删除按钮
         return row; //返回tr数据
     }
@@ -267,6 +279,8 @@
                 <th>入学年份</th>
                 <th>身份证号</th>
                 <th>个人行为</th>
+                <th>留级</th>
+                <th>休学</th>
             </tr>
             </thead>
             <tbody id="tbMain"></tbody>

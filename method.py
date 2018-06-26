@@ -34,11 +34,11 @@ removestudent={
     'class_id':'',
     'class_num':''
 }
+num={
+    'liuji_num':0,
+    'xiuxue_num':0
+}
 class method:
-    ######################################
-    """登陆
-            查询用户是否存在
-    """
     def login_choose(self, input_login):
         sql = SQL.login_search_sql(input_login)
         temp = input_login['number']
@@ -181,8 +181,7 @@ class method:
         else:
             return None
     ######################################
-    """辅导员查看所有学生部分信息，并修改个人行为
-    """
+    # 辅导员qudiyige  xuesheng
     def lstusinfo_info_search_sql(self,input):
         sql = SQL.lstusinfo_info_search_sql(input)
         results = db.execute(sql)
@@ -191,9 +190,19 @@ class method:
             return results
         else:
             return None
+    # 辅导员chazhao  xuesheng
+    def glstubeha_info_search_sql(self,input):
+        sql=SQL.glstubeha_info_search_sql(input)
+        results=db.execute(sql)
+        print(results)
+        db.commit()
+        if results is not None:
+            result=results[0]
+            return result
+        else:
+            return None
     ######################################
-    """fudaoyuan添加学生行为
-    """
+    # 辅导员tijiao xuesheng
     def fchastube_info_search_sql(self, input):
         sql = SQL.fchastube_info_search_sql(input)
         db.execute_no_return(sql)
@@ -380,8 +389,8 @@ class method:
                                                             oldcounselor_next='%s'
                                                      where ooldcounselor_id='%s'"""
                                  % (resultget1['counselor_id'], resultget1['counselor_name'], resultget1['counselor_sex'],
-                   resultget1['counselor_phone'], resultget1['counselor_departments'],
-                   resultget1['counselor_next'],resultget1['counselor_id']))
+                                    resultget1['counselor_phone'], resultget1['counselor_departments'],
+                                    resultget1['counselor_next'],resultget1['counselor_id']))
     #####################################
     # 删除毕业学生
     def remove0_info_search_sql(self, input):
@@ -602,6 +611,7 @@ class method:
             return result
         else:
             return None
+    #############################################
     # 取chazhao学生信息
     def glsinfo_info_search_sql(self,input):
         sql = SQL.glsinfo_info_search_sql(input)
@@ -816,6 +826,102 @@ class method:
     ######################################
     ######################################
     ######################################
+    def gettwo0(self):
+        result0=db.execute("select * from student where student_liuji='1'")
+        print(result0)
+        if result0 is not None:
+            num['liuji_num']=len(result0)
+        result1 = db.execute("select * from student where student_xiuxue='1'")
+        if result1 is not None:
+            num['xiuxue_num']=len(result1)
+        return num
+    def gettwo1(self,input):
+        num['liuji_num']=0;
+        num['xiuxue_num'] = 0;
+        if input['student_departments']!='' and input['nianji']!='' and input['student_class_id']!='':
+            print(1)
+            result0=db.execute("""select * from student where (student_departments='%s' and student_school_time='%s' and student_class_id='%s' and student_liuji='1')""" %(input['student_departments'],input['nianji'],input['student_class_id']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_departments='%s' and student_school_time='%s' and student_class_id='%s' and student_xiuxue='1')""" % (input['student_departments'], input['nianji'], input['student_class_id']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        elif input['student_departments'] != '' and input['nianji'] != '' and input['student_class_id'] == '':
+            print(2)
+            result0 = db.execute(
+                """select * from student where (student_departments='%s' and student_school_time='%s'and student_liuji='1')""" % (
+                    input['student_departments'], input['nianji']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num'] = len(result0)
+            result1 = db.execute(
+                """select * from student where (student_departments='%s' and student_school_time='%s'and student_xiuxue='1')""" % (
+                    input['student_departments'], input['nianji']))
+            if result1 is not None:
+                num['xiuxue_num'] = len(result1)
+        elif input['student_departments']!='' and input['nianji']=='' and input['student_class_id']!='':
+            print(3)
+            result0=db.execute("""select * from student where (student_departments='%s' and student_class_id='%s' and student_liuji='1')""" %(input['student_departments'],input['student_class_id']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_departments='%s' and student_class_id='%s' and student_xiuxue='1')""" % (input['student_departments'],input['student_class_id']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        elif input['student_departments']=='' and input['nianji']!='' and input['student_class_id']!='':
+            print(4)
+            result0=db.execute("""select * from student where (student_school_time='%s' and student_class_id='%s' and student_liuji='1')""" %(input['nianji'],input['student_class_id']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_school_time='%s' and student_class_id='%s' and student_xiuxue='1')""" % (input['nianji'], input['student_class_id']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        elif input['student_departments']=='' and input['nianji']=='' and input['student_class_id']!='':
+            print(5)
+            result0=db.execute("""select * from student where (student_class_id='%s' and student_liuji='1')""" %(input['student_class_id']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_class_id='%s' and student_xiuxue='1')""" % (input['student_class_id']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        elif input['student_departments']=='' and input['nianji']!='' and input['student_class_id']=='':
+            print(6)
+            result0=db.execute("""select * from student where (student_school_time='%s'and student_liuji='1')""" %(input['nianji']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_school_time='%s'and student_xiuxue='1')""" % (input['nianji']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        elif input['student_departments']!='' and input['nianji']=='' and input['student_class_id']=='':
+            print(7)
+            result0=db.execute("""select * from student where (student_departments='%s' and student_liuji='1')""" %(input['student_departments']))
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute(
+                """select * from student where (student_departments='%s' and student_xiuxue='1')""" % (input['student_departments']))
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        else:
+            print(8)
+            result0=db.execute("select * from student where student_liuji='1'")
+            print(result0)
+            if result0 is not None:
+                num['liuji_num']=len(result0)
+            result1 = db.execute("select * from student where student_xiuxue='1'")
+            if result1 is not None:
+                num['xiuxue_num']=len(result1)
+        return num
+
     ######################################
     """
         数据库链接接口

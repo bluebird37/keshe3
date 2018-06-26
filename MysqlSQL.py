@@ -35,7 +35,7 @@ class SQL_general:
     """学生查看自己信息
     """
     def slmy_info_search_sql(self, input):
-        sql = """select student.student_number,student.student_name,student.student_sex,student.student_birsday,student.student_identity,student.student_departments,student.student_job,student.student_class_id,student.student_location,student.student_phone,student.student_national,student.student_school_time,student.student_idnumber,student.student_behavior,class.class_nature from student,class where (student.student_number='%s' and student.student_class_id=class.class_id)""" % (input['number'])
+        sql = """select student.student_number,student.student_name,student.student_sex,student.student_birsday,student.student_identity,student.student_departments,student.student_job,student.student_class_id,student.student_location,student.student_phone,student.student_national,student.student_school_time,student.student_idnumber,student.student_behavior,student.student_liuji,student.student_xiuxue,class.class_nature from student,class where (student.student_number='%s' and student.student_class_id=class.class_id)""" % (input['number'])
         return sql
 ###############################
     """学生查看自己成绩
@@ -284,6 +284,7 @@ class SQL_general:
     def removeco2_info_info_search_sql(self, input):
         sql = """delete from login where (login.numberall='%s')""" % (input['counselor_id'])
         return sql
+    ##########################################
     # # 取第一个学生信息
     def gfsinfo_info_search_sql(self):
         sql="select * from student"
@@ -299,7 +300,6 @@ class SQL_general:
     def glsinfo_info_search_sql(self,input):
         sql = """select * from student where student_number='%s'""" % (input['student_number'])
         return sql;
-
     # 取chazhao tea信息
     def gltinfo_info_search_sql(self,input):
         sql = """select * from teacher where teacher_id='%s'""" % (input['teacher_id'])
@@ -308,3 +308,10 @@ class SQL_general:
     def glfinfo_info_search_sql(self,input):
         sql = """select * from counselor where counselor_id='%s'""" % (input['counselor_id'])
         return sql;
+    ###############################################
+    # 辅导员chazhao  xuesheng
+    def glstubeha_info_search_sql(self,input):
+        sql = """select student.student_number,student.student_name,student.student_sex,student.student_departments,student.student_job,student.student_class_id,student.student_phone,student.student_behavior from student,class,counselor where (student.student_class_id=class.class_id and class.class_counselor_id=counselor.counselor_id and counselor.counselor_id='%s' and student.student_number='%s')""" % (
+            input['counselor_id'],input['student_number'])
+        return sql
+    # 辅导员chazhao  banji

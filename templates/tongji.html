@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrom=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../static/jquery.min.js"></script>
+    <style>
+        body,ul,li,a
+        {
+            padding: 0;
+            margin: 0;
+        }
+        body
+        {
+            margin-top: 50px;
+            background-color:#e6e6e6;
+            color: #fff;
+        }
+        #table1{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 30px;
+            height: 80px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
+        }
+        th{
+            text-align: center;
+            height: 60px;
+            color: #080808;
+        }
+        input[type="text"]{
+            margin-left: 100px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        input[type="text1"]{
+            margin-left: 40px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        input[type="text2"]{
+            margin-left: 40px;
+            height: 40px;
+            width: 200px;
+            border-radius: 5px;
+            color: #080808;
+            background-color: #e6e6e6;
+        }
+        tbody {
+            height: auto;
+            color: #080808;
+            background-color: #e6e6e6;
+            text-align: center;
+
+        }
+        #submit{
+            margin-left: 40px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+        #submit1{
+            margin-left: 20px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+    </style>
+</head>
+
+<!--初始预约信息-->
+<script>
+    var number=localStorage.getItem("keepnumber");
+    function s() {
+        get();
+    }
+    function get(){
+        $.ajax({
+            url:"/gettwo0",
+            type:'GET',
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['liuji_num'];
+                    document.getElementById('t2').innerText=data['xiuxue_num'];
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction() {
+        var zhuanye=document.getElementById('search').value;
+        var nianji=document.getElementById('search1').value;
+        var banji=document.getElementById('search2').value;
+        var flag=1;
+        var shuzi2=/^\d{4}$/;
+        if(nianji.length>0&&!shuzi2.test(nianji)){
+            flag=0;
+            alert("年级应为4位数字");
+        }
+        if(flag==1){
+            mydata={'student_departments':zhuanye,'nianji':nianji,'student_class_id':banji};
+            $.ajax({
+                url:"/gettwo1",
+                type:'POST',
+                data:mydata,
+                success: function (data) {
+                    if(data!='false'){
+                        document.getElementById('t1').innerText=data['liuji_num'];
+                        document.getElementById('t2').innerText=data['xiuxue_num'];
+                    }
+                    else{
+                        alert("查找信息不存在或有误")
+                    }
+                }.bind(this),
+                error: function () {
+                    alert('获取数据失败');
+                }
+            })
+        }
+    }
+    function myfunction1() {
+        document.getElementById('search').value='';
+        document.getElementById('search1').value='';
+        document.getElementById('search2').value='';
+    }
+</script>
+
+<body onload="s()">
+<div>
+    <label style="margin-left:100px;font-size: 20px;color: #080808">学生情况统计</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="search" placeholder="专业名" required autofocus><input type="text1" id="search1" placeholder="入学年份" required autofocus><input type="text2" id="search2" placeholder="班级" required autofocus><button id="submit" onclick="myfunction()">查找</button><button id="submit1" onclick="myfunction1()">清空</button>
+    <table border="1" id="table1">
+        <tr>
+            <td >留级人数</td>
+            <td id="t1"></td>
+            <td >休学人数</td>
+            <td id="t2"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

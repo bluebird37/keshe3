@@ -14,29 +14,31 @@
         }
         body
         {
-            margin-top: 20px;
+            margin-top: 50px;
             background-color:#e6e6e6;
             color: #fff;
         }
-        .commonDiv{
-            border:3px solid #ffc107; /*上下左右的边框线样式相同*/
-            margin-left:80px;
-            margin-top:10px;
-            width: 1200px;
-            height: 520px;
-            border-radius: 20px;
-        }
-        table{
+        #table1{
             table-layout: fixed;
             border-collapse: collapse;
-            margin-left: 20px;
-            height: 460px;
-            width: 1100px;
+            margin-left: 70px;
+            margin-top: 50px;
+            height: 350px;
+            width: 1200px;
             word-break:break-all;
-            border-right-color: #fdfdfe;
-            border-bottom-color: #fdfdfe;
-            border-left-color: #fdfdfe;
-            border-top-color: #fdfdfe;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #table2{
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 70px;
+            margin-top: 0px;
+            height: 70px;
+            width: 1200px;
+            word-break:break-all;
+            vertical-align: middle;
+            text-align: center;
         }
         th{
             text-align: center;
@@ -44,19 +46,12 @@
             color: #080808;
         }
         input[type="text"]{
-            margin-left: 750px;
+            margin-left: 300px;
             height: 40px;
             width: 200px;
             border-radius: 5px;
             color: #080808;
             background-color: #e6e6e6;
-        }
-        input[type="button"]{
-            height: 40px;
-            width: 60px;
-            border-radius: 10px;
-            color: #080808;
-            background-color: #80bdff;
         }
         tbody {
             height: auto;
@@ -65,50 +60,48 @@
             text-align: center;
 
         }
-        #mydiv{
-            overflow: auto;
-            margin-top: 30px;
-            margin-left: 20px;
-            height: 460px;
-            position: absolute;
+        #submit{
+            margin-left: 40px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
+        }
+        #submit1{
+            margin-left: 100px;
+            height: 40px;
+            width: 100px;
+            border-radius: 15px;
+            color: #080808;
+            background-color: #00bbff;
         }
     </style>
 </head>
-<!--模糊搜索-->
-<script>
-$().ready(function(){
-            $("#search").keyup(
-                function(){
-                    $("table tr:gt(0)").hide();
-                    var $d = $("table tr:gt(0)").filter(":contains('"+$.trim($("#search").val())+"')");
-                    $d.show();
-                }
-            )
-        })
-</script>
+
+<!--初始预约信息-->
 <script>
     var number=localStorage.getItem("keepnumber");
     function s() {
         document.getElementById("Span").innerText =number;
-        look_studentgra();
+        get();
     }
-    function look_studentgra() {
+    function get(){
         var mydata={'counselor_id':number};
         $.ajax({
-            url:"/lookstudentsomeinformation",
+            url:"/getfirststubeha",
             type:'POST',
             data:mydata,
-            success: function (data) {//请求得到服务器该学生的预约情况
-                if(data=='false'){
-                    alert("没有信息");
-                }
-                else{
-                    getdata=data['result'];
-                    var tbody = document.getElementById('tbMain');
-                    for(var i = 0;i < getdata.length; i++){ //遍历一下json数据
-                        var trow = getDataRow(getdata[i],i); //定义一个方法,返回tr数据
-                        tbody.appendChild(trow);
-                    }
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['student_number'];
+                    document.getElementById('t2').innerText=data['student_name'];
+                    document.getElementById('t3').innerText=data['student_sex'];
+                    document.getElementById('t4').innerText=data['student_departments'];
+                    document.getElementById('t5').innerText=data['student_job'];
+                    document.getElementById('t6').innerText=data['student_class_id'];
+                    document.getElementById('t7').innerText=data['student_phone'];
+                    document.getElementById('t8').innerText=data['student_behavior'];
                 }
             }.bind(this),
             error: function () {
@@ -116,51 +109,37 @@ $().ready(function(){
             }
         })
     }
-    function getDataRow(h,j){
-        var row = document.createElement('tr'); //创建行
-        //创建第一列
-        var lie0 = document.createElement('td');
-        lie0.innerHTML = h.student_number; //填充数据
-        row.appendChild(lie0); //加入行  ，下面类似
-        //创建第二列
-        var lie1 = document.createElement('td');
-        lie1.innerHTML = h.student_name;
-        row.appendChild(lie1);
-        //创建第三列
-        var lie2 = document.createElement('td');
-        lie2.innerHTML = h.student_sex;
-        row.appendChild(lie2);
-        //创建第6列
-        var lie3 = document.createElement('td');
-        lie3.innerHTML = h.student_departments;
-        row.appendChild(lie3);
-        //创建第7列
-        var lie4 = document.createElement('td');
-        lie4.innerHTML = h.student_job;
-        row.appendChild(lie4);
-        //创建第8列
-        var lie5 = document.createElement('td');
-        lie5.innerHTML = h.student_class_id;
-        row.appendChild(lie5);
-        var lie6 = document.createElement('td');
-        lie6.innerHTML = h.student_phone;
-        row.appendChild(lie6);
-        var lie7 = document.createElement('td');
-        lie7.contentEditable="true";
-        lie7.innerHTML = h.student_behavior;
-        row.appendChild(lie7);
-         //到这里，json中的数据已经添加到表格中，下面为每行末尾添加删除按钮
-        var viewCell = document.createElement('td');//创建第9列，操作列
-        row.appendChild(viewCell);
-        var btnview = document.createElement('input'); //创建一个input控件
-        btnview.setAttribute('type', 'button'); //type="button"
-        btnview.setAttribute('value', '提交');
-        btnview.onclick = function () {
-        if (confirm("确定提交更改信息？")) {
-            //找到按钮所在行的节点，然后删掉这一行
-            var tab=document.getElementById("table1");
-            var newbehavior=tab.rows[j+1].cells[7].innerHTML;
-            var studentnumber=tab.rows[j+1].cells[0].innerHTML;
+    function myfunction() {
+        var student_number=document.getElementById('search').value;
+        mydata={'student_number':student_number,'counselor_id':number};
+        $.ajax({
+            url:"/getlookstubeha",
+            type:'POST',
+            data:mydata,
+            success: function (data) {
+                if(data!='false'){
+                    document.getElementById('t1').innerText=data['student_number'];
+                    document.getElementById('t2').innerText=data['student_name'];
+                    document.getElementById('t3').innerText=data['student_sex'];
+                    document.getElementById('t4').innerText=data['student_departments'];
+                    document.getElementById('t5').innerText=data['student_job'];
+                    document.getElementById('t6').innerText=data['student_class_id'];
+                    document.getElementById('t7').innerText=data['student_phone'];
+                    document.getElementById('t8').innerText=data['student_behavior'];
+                }
+                else{
+                    alert("该班级没有该学生!");
+                }
+            }.bind(this),
+            error: function () {
+                alert('获取数据失败');
+            }
+        })
+    }
+    function myfunction1() {
+        if (confirm("确定提交更改？")) {
+            var newbehavior=document.getElementById('t8').innerText;
+            var studentnumber=document.getElementById('t1').innerText;
             var mydata={'number':studentnumber, 'behavior':newbehavior};
             $.ajax({
                 url:"/changestudentbehavior",
@@ -178,33 +157,35 @@ $().ready(function(){
             })
         }
     }
-    viewCell.appendChild(btnview);  //把删除按钮加入td，别忘了
-        return row; //返回tr数据
-    }
 </script>
 
 <body onload="s()">
-<label style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工:</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="模糊搜索" required autofocus>
-<!--设计上下左右边框-->
-<div class="commonDiv">
-    <div id="mydiv">
-        <table id="table1" border="1">
-            <thead>
-            <tr>
-                <th>学号</th>
-                <th>姓名</th>
-                <th>性别</th>
-                <th>院系</th>
-                <th>专业</th>
-                <th>班级</th>
-                <th>联系电话</th>
-                <th>个人行为(可编辑)</th>
-                <th>提交修改信息</th>
-            </tr>
-            </thead>
-            <tbody id="tbMain"></tbody>
-        </table>
-    </div>
-</div>
+<label id="admin" style="margin-left: 160px;margin-top: 0px;font-size: 20px; color: #080808">教职工：</label>&nbsp;&nbsp;&nbsp;&nbsp;<span id="Span" style="font-size: 20px; color: #080808"></span><input type="text" id="search" placeholder="检索学生学号" required autofocus><button id="submit" onclick="myfunction()">查找</button><button id="submit1" onclick="myfunction1()">提交更改</button>
+<table border="1" id="table1">
+    <tr>
+        <td >学号</td>
+        <td id="t1"></td>
+        <td >姓名</td>
+        <td id="t2"></td>
+    </tr>
+    <tr>
+        <td >性别</td>
+        <td id="t3"></td>
+        <td >院系</td>
+        <td id="t4"></td>
+    </tr>
+    <tr>
+        <td >专业</td>
+        <td id="t5"></td>
+        <td >班级</td>
+        <td id="t6"></td>
+    </tr>
+    <tr>
+        <td >联系电话</td>
+        <td id="t7"></td>
+        <td >个人行为</td>
+        <td id="t8" contentEditable="true"></td>
+    </tr>
+</table>
 </body>
 </html>

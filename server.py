@@ -92,6 +92,15 @@ remove={
     'teacher_id':'',
     'counselor_id':''
 }
+fdystu={
+    'student_number':'',
+    'counselor_id':''
+}
+tongji1={
+    'student_departments':'',
+    'nianji':'',
+    'student_class_id':''
+}
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('login.html')
@@ -188,6 +197,9 @@ class PeopleHandler(tornado.web.RequestHandler):
 class PageHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('page.html')
+class TongjiHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('tongji.html')
 ###################################################################
 #找回密码
 class getpasswordHandler(tornado.web.RequestHandler):
@@ -323,8 +335,8 @@ class lstuinfoHandler(tornado.web.RequestHandler):
             self.write(result)
         else:
             self.write('false')
-#辅导员查看所有学生部分信息，并修改个人行为
-class lstusinfoHandler(tornado.web.RequestHandler):
+#辅导员查看diyigexuesheng
+class gfbehaHandler(tornado.web.RequestHandler):
     def post(self):
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
@@ -332,10 +344,21 @@ class lstusinfoHandler(tornado.web.RequestHandler):
         here['counselor_id'] = self.get_argument('counselor_id')
         results=md.lstusinfo_info_search_sql(here)
         if results is not None:
-            result={
-                'result':results
-            }
+            result=results[0]
             self.write(result)
+        else:
+            self.write('false')
+#辅导员chazhao  xuesheng
+class glstubehaHandler(tornado.web.RequestHandler):
+    def post(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'GET,POST')
+        fdystu['student_number'] = self.get_argument('student_number')
+        fdystu['counselor_id'] = self.get_argument('counselor_id')
+        results=md.glstubeha_info_search_sql(fdystu)
+        if results is not None:
+            self.write(results)
         else:
             self.write('false')
 #辅导员修改学生行为
@@ -629,6 +652,29 @@ class remove3Handler(tornado.web.RequestHandler):
             self.write('false0')
         else:
             self.write('true')
+#gettwo0
+class gettwo0Handler(tornado.web.RequestHandler):
+    def get(self):
+        print(0)
+        results = md.gettwo0()
+        if results is not None:
+            self.write(results)
+        else:
+            self.write('false')
+#gettwo0
+class gettwo1Handler(tornado.web.RequestHandler):
+    def post(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
+        self.set_header('Access-Control-Allow-Methods', 'GET,POST')
+        tongji1['student_departments'] = self.get_argument('student_departments')
+        tongji1['nianji'] = self.get_argument('nianji')
+        tongji1['student_class_id'] = self.get_argument('student_class_id')
+        results = md.gettwo1(tongji1)
+        if results is not None:
+            self.write(results)
+        else:
+            self.write('false')
 ###################################################
 if __name__ == '__main__':
     #数据库链接
@@ -670,6 +716,7 @@ if __name__ == '__main__':
             (r'/daoru.html', DaoruHandler),
             (r'/people.html', PeopleHandler),
             (r'/page.html', PageHandler),
+            (r'/tongji.html', TongjiHandler),
             ##################################################
             ####           get post请求     ###################
             ##################################################
@@ -686,10 +733,11 @@ if __name__ == '__main__':
             #################################################
             (r'/fudaoyuanlookmyinformation', fdylmyinfoHandler),
             (r'/lookstudentinformation', lstuinfoHandler),
-            (r'/lookstudentsomeinformation', lstusinfoHandler),
             (r'/changestudentbehavior', chastubehaHandler),
             (r'/lookclassnature', lookclassnatureHandler),
             (r'/changeclassbehavior', chaclabehaHandler),
+            (r'/getfirststubeha', gfbehaHandler),
+            (r'/getlookstubeha', glstubehaHandler),
             #################################################
             (r'/getfirststuinfo', gfsinfoHandler),
             (r'/getfirstteainfo', gftinfoHandler),
@@ -709,6 +757,8 @@ if __name__ == '__main__':
             (r'/remove1', remove1Handler),
             (r'/remove2', remove2Handler),
             (r'/remove3', remove3Handler),
+            (r'/gettwo0', gettwo0Handler),
+            (r'/gettwo1', gettwo1Handler),
         ],
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static")
