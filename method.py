@@ -180,6 +180,18 @@ class method:
             return results
         else:
             return None
+
+    """查看所有学生信息
+        """
+
+    def loldstuinfo_info_search_sql(self):
+        sql = SQL.loldstuinfo_info_search_sql()
+        results = db.execute(sql)
+        db.commit()
+        if results is not None:
+            return results
+        else:
+            return None
     ######################################
     # 辅导员qudiyige  xuesheng
     def lstusinfo_info_search_sql(self,input):
@@ -449,7 +461,7 @@ class method:
             sqlremove08 = SQL.remove08_info_info_search_sql(input)
             db.execute_no_return(sqlremove08)
             db.commit()
-            ###删除带有student_class_id的表
+            ###获取学生class_id
             sqlselect2 = SQL.removeselect2_info_info_search_sql(input)
             results2 = db.execute(sqlselect2)
             db.commit()

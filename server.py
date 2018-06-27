@@ -170,6 +170,9 @@ class FlmyinfoHandler(tornado.web.RequestHandler):
 class LstuinfoHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('lookstudentinformation.html')
+class LoldstuinfoHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('lookoldstudentinformation.html')
 class ChastubehaHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('changestudentbehavior.html')
@@ -328,6 +331,17 @@ class fdylmyinfoHandler(tornado.web.RequestHandler):
 class lstuinfoHandler(tornado.web.RequestHandler):
     def get(self):
         results=md.lstuinfo_info_search_sql()
+        if results is not None:
+            result={
+                'result':results
+            }
+            self.write(result)
+        else:
+            self.write('false')
+#查看所有学生信息
+class loldstuinfoHandler(tornado.web.RequestHandler):
+    def get(self):
+        results=md.loldstuinfo_info_search_sql()
         if results is not None:
             result={
                 'result':results
@@ -713,6 +727,7 @@ if __name__ == '__main__':
             (r'/changestudentgrade.html', CstugraHandler),
             (r'/lookstudentgrade.html', LstugraHandler),
             (r'/lookfudaoyuaninformation.html', LfdyinfoHandler),
+            (r'/lookoldstudentinformation.html', LoldstuinfoHandler),
             (r'/daoru.html', DaoruHandler),
             (r'/people.html', PeopleHandler),
             (r'/page.html', PageHandler),
@@ -733,6 +748,7 @@ if __name__ == '__main__':
             #################################################
             (r'/fudaoyuanlookmyinformation', fdylmyinfoHandler),
             (r'/lookstudentinformation', lstuinfoHandler),
+            (r'/lookoldstudentinformation', loldstuinfoHandler),
             (r'/changestudentbehavior', chastubehaHandler),
             (r'/lookclassnature', lookclassnatureHandler),
             (r'/changeclassbehavior', chaclabehaHandler),

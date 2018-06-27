@@ -67,6 +67,9 @@ class SQL_general:
     def lstuinfo_info_search_sql(self):
         sql = "select * from student "
         return sql
+    def loldstuinfo_info_search_sql(self):
+        sql = "select * from oldstudent "
+        return sql
 ##########################################
     """辅导员查看所有学生部分信息，并修改个人行为
     """
